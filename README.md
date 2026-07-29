@@ -1,5 +1,5 @@
 
-# TechService - Ricardo Gomes
+# TechService - Ricardo gomes
 
 ## Sistema de Gestão de Assistência Técnica
 
