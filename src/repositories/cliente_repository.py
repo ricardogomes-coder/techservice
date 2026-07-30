@@ -56,11 +56,21 @@ def atualizar(cliente):
         SET nome = %s,
             email = %s,
             telefone = %s,
+            nif = %s,
+            morada = %s,
             data_alteracao = NOW()
         WHERE id_cliente = %s
           AND status = 1
     """
-    valores = (cliente.nome, cliente.email, cliente.telefone, cliente.id_cliente)
+
+    valores = (
+        cliente.get_nome(),
+        cliente.get_email(),
+        cliente.get_telefone(),
+        cliente.get_nif(),
+        cliente.get_morada(),
+        cliente.get_id_cliente()
+    )
 
     cursor.execute(sql, valores)
     conexao.commit()
@@ -68,7 +78,7 @@ def atualizar(cliente):
     cursor.close()
     conexao.close()
 
-def excluir(id_cliente):
+def eliminar(id_cliente):
     conexao = conectar()
     cursor = conexao.cursor()
 
