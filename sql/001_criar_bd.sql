@@ -30,11 +30,12 @@ CREATE TABLE equipamento (
     observacoes VARCHAR(200)
 )ENGINE=InnoDB;
 
+
 CREATE TABLE ordem_de_servico (
     id_ordem INT AUTO_INCREMENT PRIMARY KEY,
     id_equipamento INT NOT NULL,
     data_abertura DATETIME NOT NULL,
-    defeito_relado VARCHAR(500),
+    defeito_relatado VARCHAR(500),
     diagnostico VARCHAR(500),
     solucao VARCHAR(500),
 	status ENUM('ABERTA', 'EM_ANDAMENTO', 'AGUARDANDO_PECAS', 'CONCLUIDA') NOT NULL DEFAULT 'ABERTA',

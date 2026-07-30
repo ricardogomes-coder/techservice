@@ -13,7 +13,13 @@ from src.repositories.equipamento_repository import (
     atualizar as atualizar_equipamento,
     eliminar as eliminar_equipamento
 )
+from src.models.ordem_de_servico import OrdemServico
 
+from src.repositories.ordem_de_servico_repository import (
+    adicionar as adicionar_ordem,
+    listar as listar_ordens,
+    atualizar as atualizar_ordem
+)
 
 # ---------------- CLIENTES ----------------
 
@@ -168,6 +174,114 @@ def menu_equipamentos():
         elif opcao == "0":
             break
 
+def menu_ordens():
+
+    while True:
+
+        print("\n=== ORDENS DE SERVIÇO ===")
+        print("1 - Abrir Ordem")
+        print("2 - Listar Ordens")
+        print("3 - Atualizar Ordem")
+        print("0 - Voltar")
+
+        opcao = input("Opção: ")
+
+        if opcao == "1":
+
+            id_equipamento = int(input("ID do Equipamento: "))
+            data_abertura = input("Data de abertura (AAAA-MM-DD HH:MM:SS): ")
+            defeito_relatado = input("Defeito relatado: ")
+            diagnostico = input("Diagnóstico: ")
+            solucao = input("Solução: ")
+            status = input("Status: ")
+            prioridade = input("Prioridade: ")
+
+            valor_servico = float(input("Valor do serviço: "))
+            valor_pecas = float(input("Valor das peças: "))
+            desconto = float(input("Desconto: "))
+
+            valor_total = valor_servico + valor_pecas - desconto
+
+            observacoes = input("Observações: ")
+
+            ordem = OrdemServico(
+                id_equipamento,
+                data_abertura,
+                defeito_relatado,
+                diagnostico,
+                solucao,
+                status,
+                prioridade,
+                valor_servico,
+                valor_pecas,
+                desconto,
+                valor_total,
+                observacoes
+            )
+
+            adicionar_ordem(ordem)
+
+            print("\nOrdem de Serviço aberta com sucesso!")
+
+        elif opcao == "2":
+
+            ordens = listar_ordens()
+
+            for o in ordens:
+
+                print("----------------------------")
+                print(f"ID: {o['id_ordem']}")
+                print(f"Cliente: {o['nome']}")
+                print(f"Marca: {o['marca']}")
+                print(f"Modelo: {o['modelo']}")
+                print(f"Data: {o['data_abertura']}")
+                print(f"Estado: {o['status']}")
+                print(f"Prioridade: {o['prioridade']}")
+                print(f"Valor Total: {o['valor_total']}")
+
+        elif opcao == "3":
+
+            id_ordem = int(input("ID da Ordem: "))
+            id_equipamento = int(input("ID do Equipamento: "))
+            defeito_relatado = input("Defeito relatado: ")
+            diagnostico = input("Diagnóstico: ")
+            solucao = input("Solução: ")
+            status = input("Status: ")
+            prioridade = input("Prioridade: ")
+
+            valor_servico = float(input("Valor do serviço: "))
+            valor_pecas = float(input("Valor das peças: "))
+            desconto = float(input("Desconto: "))
+
+            valor_total = valor_servico + valor_pecas - desconto
+
+            observacoes = input("Observações: ")
+
+            ordem = OrdemServico(
+                id_equipamento,
+                None,
+                defeito_relatado,
+                diagnostico,
+                solucao,
+                status,
+                prioridade,
+                valor_servico,
+                valor_pecas,
+                desconto,
+                valor_total,
+                observacoes,
+                id_ordem
+            )
+
+            atualizar_ordem(ordem)
+
+            print("\nOrdem atualizada com sucesso!")
+
+        elif opcao == "0":
+            break
+
+        else:
+            print("Opção inválida!")
 
 # ---------------- MENU PRINCIPAL ----------------
 
@@ -178,6 +292,7 @@ def main():
         print("\n========== TECHSERVICE ==========")
         print("1 - Clientes")
         print("2 - Equipamentos")
+        print("3 - Ordens de Serviço")
         print("0 - Sair")
 
         opcao = input("Escolha uma opção: ")
@@ -188,6 +303,9 @@ def main():
         elif opcao == "2":
             menu_equipamentos()
 
+        elif opcao == "3":
+            menu_ordens()
+            
         elif opcao == "0":
             print("Programa terminado.")
             break

@@ -44,9 +44,21 @@ def listar():
     cursor = conexao.cursor(dictionary=True)
 
     sql = """
-        SELECT *
-        FROM ordem_de_servico
-        ORDER BY id_ordem
+        SELECT
+            os.id_ordem,
+            c.nome,
+            e.marca,
+            e.modelo,
+            os.data_abertura,
+            os.status,
+            os.prioridade,
+            os.valor_total
+        FROM ordem_de_servico os
+        JOIN equipamento e
+            ON os.id_equipamento = e.id_equipamento
+        JOIN clientes c
+            ON e.id_cliente = c.id_cliente
+        ORDER BY os.id_ordem
     """
 
     cursor.execute(sql)
