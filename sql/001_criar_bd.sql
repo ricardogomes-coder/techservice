@@ -27,8 +27,7 @@ CREATE TABLE equipamento (
     modelo VARCHAR(50),
     numero_serie VARCHAR(100) UNIQUE,
     data_compra date,
-    observacoes VARCHAR(200),
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
+    observacoes VARCHAR(200)
 )ENGINE=InnoDB;
 
 CREATE TABLE ordem_de_servico (
@@ -44,8 +43,7 @@ CREATE TABLE ordem_de_servico (
     valor_pecas DECIMAL(10,2) DEFAULT 0.00,
     desconto DECIMAL(10,2) DEFAULT 0.00,
     valor_total DECIMAL(10,2) DEFAULT 0.00,
-	observacoes VARCHAR(300),
-	FOREIGN KEY (id_equipamento) REFERENCES equipamento(id_equipamento)
+	observacoes VARCHAR(300)
 )ENGINE=InnoDB;
 
 CREATE TABLE historico_ordem_servico(
@@ -58,3 +56,8 @@ CREATE TABLE historico_ordem_servico(
     data_eliminacao DATETIME,
 	FOREIGN KEY (id_ordem) REFERENCES ordem_de_servico(id_ordem)
 )ENGINE=InnoDB;
+
+Select * From clientes;
+Select * From equipamento;
+Select * From ordem_de_servico;
+select * From historico_ordem_servico;
