@@ -11,11 +11,11 @@ def adicionar(cliente):
     """
 
     valores = (
-        cliente.nome,
-        cliente.email,
-        cliente.telefone,
-        cliente.nif,
-        cliente.morada
+        cliente.get_nome(),
+        cliente.get_email(),
+        cliente.get_telefone(),
+        cliente.get_nif(),
+        cliente.get_morada()
     )
 
     cursor.execute(sql, valores)
@@ -33,8 +33,8 @@ def listar():
     cursor = conexao.cursor(dictionary=True)
 
     sql = """
-        SELECT id_cliente, nome, email, telefone, status,
-               created_at, updated_at, deleted_at
+        SELECT id_cliente, nome, email, telefone, nif, morada,
+               status, data_cadatro, data_alteracao, data_eliminacao
         FROM clientes
         WHERE status = 1
         ORDER BY id_cliente
@@ -56,7 +56,7 @@ def atualizar(cliente):
         SET nome = %s,
             email = %s,
             telefone = %s,
-            updated_at = NOW()
+            data_alteracao = NOW()
         WHERE id_cliente = %s
           AND status = 1
     """
@@ -75,7 +75,7 @@ def excluir(id_cliente):
     sql = """
         UPDATE clientes
         SET status = 0,
-            deleted_at = NOW()
+            data_eliminacao = NOW()
         WHERE id_cliente = %s
           AND status = 1
     """
