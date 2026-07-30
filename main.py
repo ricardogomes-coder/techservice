@@ -1,109 +1,199 @@
 from src.models.cliente import Cliente
-from src.repositories.cliente_repository import listar, adicionar, atualizar, eliminar
+from src.models.equipamento import Equipamento
+from src.repositories.cliente_repository import (
+    adicionar as adicionar_cliente,
+    listar as listar_clientes,
+    atualizar as atualizar_cliente,
+    eliminar as eliminar_cliente
+)
+
+from src.repositories.equipamento_repository import (
+    adicionar as adicionar_equipamento,
+    listar as listar_equipamentos,
+    atualizar as atualizar_equipamento,
+    eliminar as eliminar_equipamento
+)
 
 
-def inserir_cliente():
-    print("\n=== Inserir Cliente ===")
+# ---------------- CLIENTES ----------------
 
-    nome = input("Nome: ")
-    email = input("Email: ")
-    telefone = input("Telefone: ")
-    nif = input("NIF: ")
-    morada = input("Morada: ")
+def menu_clientes():
 
-    cliente = Cliente(
-        nome=nome,
-        email=email,
-        telefone=telefone,
-        nif=nif,
-        morada=morada
-    )
+    while True:
+        print("\n=== CLIENTES ===")
+        print("1 - Inserir")
+        print("2 - Listar")
+        print("3 - Atualizar")
+        print("4 - Eliminar")
+        print("0 - Voltar")
 
-    adicionar(cliente)
+        opcao = input("Opção: ")
 
-    print("\nCliente inserido com sucesso!")
-    print(f"ID: {cliente.get_id_cliente()}")
+        if opcao == "1":
+
+            nome = input("Nome: ")
+            email = input("Email: ")
+            telefone = input("Telefone: ")
+            nif = input("NIF: ")
+            morada = input("Morada: ")
+
+            cliente = Cliente(nome, email, telefone, nif, morada)
+
+            adicionar_cliente(cliente)
+
+            print("\nCliente inserido com sucesso!")
+
+        elif opcao == "2":
+
+            clientes = listar_clientes()
+
+            for c in clientes:
+                print("-----------------------")
+                print(f"ID: {c['id_cliente']}")
+                print(f"Nome: {c['nome']}")
+                print(f"Email: {c['email']}")
+                print(f"Telefone: {c['telefone']}")
+
+        elif opcao == "3":
+
+            id_cliente = int(input("ID: "))
+            nome = input("Nome: ")
+            email = input("Email: ")
+            telefone = input("Telefone: ")
+            nif = input("NIF: ")
+            morada = input("Morada: ")
+
+            cliente = Cliente(nome, email, telefone, nif, morada, id_cliente)
+
+            atualizar_cliente(cliente)
+
+            print("Cliente atualizado!")
+
+        elif opcao == "4":
+
+            id_cliente = int(input("ID: "))
+
+            eliminar_cliente(id_cliente)
+
+            print("Cliente eliminado!")
+
+        elif opcao == "0":
+            break
 
 
-def listar_clientes():
-    print("\n=== Clientes ativos ===")
+# ---------------- EQUIPAMENTOS ----------------
 
-    clientes = listar()
+def menu_equipamentos():
 
-    for item in clientes:
-        print("--------------------")
-        print(f"ID: {item['id_cliente']}")
-        print(f"Nome: {item['nome']}")
-        print(f"Email: {item['email']}")
-        print(f"Telefone: {item['telefone']}")
-        print(f"NIF: {item['nif']}")
-        print(f"Morada: {item['morada']}")
+    while True:
+        print("\n=== EQUIPAMENTOS ===")
+        print("1 - Inserir")
+        print("2 - Listar")
+        print("3 - Atualizar")
+        print("4 - Eliminar")
+        print("0 - Voltar")
+
+        opcao = input("Opção: ")
+
+        if opcao == "1":
+
+            id_cliente = int(input("ID do Cliente: "))
+            tipo = input("Tipo: ")
+            marca = input("Marca: ")
+            modelo = input("Modelo: ")
+            numero_serie = input("Número de Série: ")
+            data_compra = input("Data Compra (AAAA-MM-DD): ")
+            observacoes = input("Observações: ")
+
+            equipamento = Equipamento(
+                id_cliente,
+                tipo,
+                marca,
+                modelo,
+                numero_serie,
+                data_compra,
+                observacoes
+            )
+
+            adicionar_equipamento(equipamento)
+
+            print("\nEquipamento inserido!")
+
+        elif opcao == "2":
+
+            equipamentos = listar_equipamentos()
+
+            for e in equipamentos:
+                print("-----------------------")
+                print(f"ID: {e['id_equipamento']}")
+                print(f"Cliente: {e['id_cliente']}")
+                print(f"Tipo: {e['tipo']}")
+                print(f"Marca: {e['marca']}")
+                print(f"Modelo: {e['modelo']}")
+
+        elif opcao == "3":
+
+            id_equipamento = int(input("ID do Equipamento: "))
+            id_cliente = int(input("ID do Cliente: "))
+            tipo = input("Tipo: ")
+            marca = input("Marca: ")
+            modelo = input("Modelo: ")
+            numero_serie = input("Número de Série: ")
+            data_compra = input("Data Compra: ")
+            observacoes = input("Observações: ")
+
+            equipamento = Equipamento(
+                id_cliente,
+                tipo,
+                marca,
+                modelo,
+                numero_serie,
+                data_compra,
+                observacoes,
+                id_equipamento
+            )
+
+            atualizar_equipamento(equipamento)
+
+            print("Equipamento atualizado!")
+
+        elif opcao == "4":
+
+            id_equipamento = int(input("ID do Equipamento: "))
+
+            eliminar_equipamento(id_equipamento)
+
+            print("Equipamento eliminado!")
+
+        elif opcao == "0":
+            break
 
 
-def atualizar_cliente():
-    print("\n=== Atualizar Cliente ===")
-
-    id_cliente = int(input("ID do cliente a atualizar: "))
-
-    nome = input("Novo nome: ")
-    email = input("Novo email: ")
-    telefone = input("Novo telefone: ")
-    nif = input("Novo NIF: ")
-    morada = input("Nova morada: ")
-
-    cliente = Cliente(
-        nome=nome,
-        email=email,
-        telefone=telefone,
-        nif=nif,
-        morada=morada,
-        id_cliente=id_cliente
-    )
-
-    atualizar(cliente)
-
-    print("\nCliente atualizado com sucesso!")
-
-
-def eliminar_cliente():
-    print("\n=== Eliminar Cliente ===")
-
-    id_cliente = int(input("ID do cliente a eliminar: "))
-
-    eliminar(id_cliente)
-
-    print("\nCliente eliminado com sucesso!")
-
+# ---------------- MENU PRINCIPAL ----------------
 
 def main():
+
     while True:
-        print("\n=== TechService ===")
-        print("1 - Inserir cliente")
-        print("2 - Listar clientes")
-        print("3 - Atualizar cliente")
-        print("4 - Eliminar cliente")
+
+        print("\n========== TECHSERVICE ==========")
+        print("1 - Clientes")
+        print("2 - Equipamentos")
         print("0 - Sair")
 
         opcao = input("Escolha uma opção: ")
 
         if opcao == "1":
-            inserir_cliente()
+            menu_clientes()
 
         elif opcao == "2":
-            listar_clientes()
-
-        elif opcao == "3":
-            atualizar_cliente()
-
-        elif opcao == "4":
-            eliminar_cliente()
+            menu_equipamentos()
 
         elif opcao == "0":
             print("Programa terminado.")
             break
 
         else:
-            print("Opção inválida!")
+            print("Opção inválida.")
 
 
 if __name__ == "__main__":

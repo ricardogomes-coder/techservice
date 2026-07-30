@@ -80,3 +80,18 @@ def atualizar(equipamento):
 
     cursor.close()
     conexao.close()
+
+def eliminar(id_equipamento):
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    sql = """
+        DELETE FROM equipamento
+        WHERE id_equipamento = %s
+    """
+
+    cursor.execute(sql, (id_equipamento,))
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()
