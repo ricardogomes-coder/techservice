@@ -1,21 +1,31 @@
 from src.database.conexao import conectar
 
-def inserir(cliente):
+
+def adicionar(cliente):
     conexao = conectar()
     cursor = conexao.cursor()
 
     sql = """
-        INSERT INTO clientes (nome, email, telefone)
-        VALUES (%s, %s, %s)
+        INSERT INTO clientes (nome, email, telefone, nif, morada)
+        VALUES (%s, %s, %s, %s, %s)
     """
-    valores = (cliente.nome, cliente.email, cliente.telefone)
+
+    valores = (
+        cliente.nome,
+        cliente.email,
+        cliente.telefone,
+        cliente.nif,
+        cliente.morada
+    )
 
     cursor.execute(sql, valores)
     conexao.commit()
+
     cliente.id_cliente = cursor.lastrowid
 
     cursor.close()
     conexao.close()
+
     return cliente
 
 def listar():
