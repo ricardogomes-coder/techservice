@@ -110,3 +110,18 @@ def atualizar(ordem):
 
     cursor.close()
     conexao.close()
+
+def eliminar(id_ordem):
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    sql = """
+        DELETE FROM ordem_de_servico
+        WHERE id_ordem = %s
+    """
+
+    cursor.execute(sql, (id_ordem,))
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()

@@ -18,7 +18,8 @@ from src.models.ordem_de_servico import OrdemServico
 from src.repositories.ordem_de_servico_repository import (
     adicionar as adicionar_ordem,
     listar as listar_ordens,
-    atualizar as atualizar_ordem
+    atualizar as atualizar_ordem,
+    eliminar as eliminar_ordem
 )
 
 # ---------------- CLIENTES ----------------
@@ -182,6 +183,7 @@ def menu_ordens():
         print("1 - Abrir Ordem")
         print("2 - Listar Ordens")
         print("3 - Atualizar Ordem")
+        print("4 - Eliminar Ordem")
         print("0 - Voltar")
 
         opcao = input("Opção: ")
@@ -277,6 +279,12 @@ def menu_ordens():
 
             print("\nOrdem atualizada com sucesso!")
 
+        elif opcao == "4":
+
+            id_ordem = int(input("ID da Ordem: "))
+            eliminar_ordem(id_ordem)
+
+            print("\nOrdem de Serviço eliminada com sucesso!")
         elif opcao == "0":
             break
 
