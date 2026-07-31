@@ -22,304 +22,392 @@ from src.repositories.ordem_de_servico_repository import (
     eliminar as eliminar_ordem
 )
 
+import flet as ft
 # ---------------- CLIENTES ----------------
 
-def menu_clientes():
+def menu_clientes(page: ft.Page):
 
-    while True:
-        print("\n=== CLIENTES ===")
-        print("1 - Inserir")
-        print("2 - Listar")
-        print("3 - Atualizar")
-        print("4 - Eliminar")
-        print("0 - Voltar")
+    id_cliente = ft.TextField(label="ID")
+    nome = ft.TextField(label="Nome")
+    email = ft.TextField(label="Email")
+    telefone = ft.TextField(label="Telefone")
+    nif = ft.TextField(label="NIF")
+    morada = ft.TextField(label="Morada")
 
-        opcao = input("Opção: ")
+    tabela = ft.Column()
 
-        if opcao == "1":
+    def carregar():
 
-            nome = input("Nome: ")
-            email = input("Email: ")
-            telefone = input("Telefone: ")
-            nif = input("NIF: ")
-            morada = input("Morada: ")
+        tabela.controls.clear()
 
-            cliente = Cliente(nome, email, telefone, nif, morada)
+        clientes = listar_clientes()
 
-            adicionar_cliente(cliente)
+        for c in clientes:
+            tabela.controls.append(
+                ft.Text(
+                    f"{c['id_cliente']} | "
+                    f"{c['nome']} | "
+                    f"{c['email']} | "
+                    f"{c['telefone']}"
+                )
+            )
 
-            print("\nCliente inserido com sucesso!")
+        page.update()
 
-        elif opcao == "2":
+    def inserir(e):
 
-            clientes = listar_clientes()
+        cliente = Cliente(
+            nome.value,
+            email.value,
+            telefone.value,
+            nif.value,
+            morada.value
+        )
 
-            for c in clientes:
-                print("-----------------------")
-                print(f"ID: {c['id_cliente']}")
-                print(f"Nome: {c['nome']}")
-                print(f"Email: {c['email']}")
-                print(f"Telefone: {c['telefone']}")
+        adicionar_cliente(cliente)
 
-        elif opcao == "3":
+        carregar()
 
-            id_cliente = int(input("ID: "))
-            nome = input("Nome: ")
-            email = input("Email: ")
-            telefone = input("Telefone: ")
-            nif = input("NIF: ")
-            morada = input("Morada: ")
+    def atualizar(e):
 
-            cliente = Cliente(nome, email, telefone, nif, morada, id_cliente)
+        cliente = Cliente(
+            nome.value,
+            email.value,
+            telefone.value,
+            nif.value,
+            morada.value,
+            int(id_cliente.value)
+        )
 
-            atualizar_cliente(cliente)
+        atualizar_cliente(cliente)
 
-            print("Cliente atualizado!")
+        carregar()
 
-        elif opcao == "4":
+    def eliminar(e):
 
-            id_cliente = int(input("ID: "))
+        eliminar_cliente(int(id_cliente.value))
 
-            eliminar_cliente(id_cliente)
+        carregar()
 
-            print("Cliente eliminado!")
+    page.controls.clear()
 
-        elif opcao == "0":
-            break
+    page.add(
 
+        ft.Text("CLIENTES", size=25),
+
+        id_cliente,
+        nome,
+        email,
+        telefone,
+        nif,
+        morada,
+
+        ft.Row(
+            [
+                ft.ElevatedButton("Inserir", on_click=inserir),
+                ft.ElevatedButton("Atualizar", on_click=atualizar),
+                ft.ElevatedButton("Eliminar", on_click=eliminar),
+                ft.ElevatedButton("Listar", on_click=lambda e: carregar()),
+            ]
+        ),
+
+        tabela,
+
+        ft.ElevatedButton(
+        "Voltar",
+        on_click=lambda e: menu_principal(page)
+        )
+    )
+
+    carregar()
 
 # ---------------- EQUIPAMENTOS ----------------
 
-def menu_equipamentos():
+def menu_equipamentos(page: ft.Page):
 
-    while True:
-        print("\n=== EQUIPAMENTOS ===")
-        print("1 - Inserir")
-        print("2 - Listar")
-        print("3 - Atualizar")
-        print("4 - Eliminar")
-        print("0 - Voltar")
+    id_equipamento = ft.TextField(label="ID Equipamento")
+    id_cliente = ft.TextField(label="ID Cliente")
+    tipo = ft.TextField(label="Tipo")
+    marca = ft.TextField(label="Marca")
+    modelo = ft.TextField(label="Modelo")
+    numero_serie = ft.TextField(label="Número de Série")
+    data_compra = ft.TextField(label="Data Compra (AAAA-MM-DD)")
+    observacoes = ft.TextField(label="Observações")
 
-        opcao = input("Opção: ")
+    tabela = ft.Column()
 
-        if opcao == "1":
+    def carregar():
 
-            id_cliente = int(input("ID do Cliente: "))
-            tipo = input("Tipo: ")
-            marca = input("Marca: ")
-            modelo = input("Modelo: ")
-            numero_serie = input("Número de Série: ")
-            data_compra = input("Data Compra (AAAA-MM-DD): ")
-            observacoes = input("Observações: ")
+        tabela.controls.clear()
 
-            equipamento = Equipamento(
-                id_cliente,
-                tipo,
-                marca,
-                modelo,
-                numero_serie,
-                data_compra,
-                observacoes
+        equipamentos = listar_equipamentos()
+
+        for e in equipamentos:
+
+            tabela.controls.append(
+                ft.Text(
+                    f"{e['id_equipamento']} | "
+                    f"Cliente: {e['id_cliente']} | "
+                    f"{e['tipo']} | "
+                    f"{e['marca']} | "
+                    f"{e['modelo']}"
+                )
             )
 
-            adicionar_equipamento(equipamento)
+        page.update()
 
-            print("\nEquipamento inserido!")
+    def inserir(e):
 
-        elif opcao == "2":
+        equipamento = Equipamento(
+            int(id_cliente.value),
+            tipo.value,
+            marca.value,
+            modelo.value,
+            numero_serie.value,
+            data_compra.value,
+            observacoes.value
+        )
 
-            equipamentos = listar_equipamentos()
+        adicionar_equipamento(equipamento)
 
-            for e in equipamentos:
-                print("-----------------------")
-                print(f"ID: {e['id_equipamento']}")
-                print(f"Cliente: {e['id_cliente']}")
-                print(f"Tipo: {e['tipo']}")
-                print(f"Marca: {e['marca']}")
-                print(f"Modelo: {e['modelo']}")
+        carregar()
 
-        elif opcao == "3":
+    def atualizar(e):
 
-            id_equipamento = int(input("ID do Equipamento: "))
-            id_cliente = int(input("ID do Cliente: "))
-            tipo = input("Tipo: ")
-            marca = input("Marca: ")
-            modelo = input("Modelo: ")
-            numero_serie = input("Número de Série: ")
-            data_compra = input("Data Compra: ")
-            observacoes = input("Observações: ")
+        equipamento = Equipamento(
+            int(id_cliente.value),
+            tipo.value,
+            marca.value,
+            modelo.value,
+            numero_serie.value,
+            data_compra.value,
+            observacoes.value,
+            int(id_equipamento.value)
+        )
 
-            equipamento = Equipamento(
-                id_cliente,
-                tipo,
-                marca,
-                modelo,
-                numero_serie,
-                data_compra,
-                observacoes,
-                id_equipamento
+        atualizar_equipamento(equipamento)
+
+        carregar()
+
+    def eliminar(e):
+
+        eliminar_equipamento(int(id_equipamento.value))
+
+        carregar()
+
+    page.controls.clear()
+
+    page.add(
+
+        ft.Text("EQUIPAMENTOS", size=25),
+
+        id_equipamento,
+        id_cliente,
+        tipo,
+        marca,
+        modelo,
+        numero_serie,
+        data_compra,
+        observacoes,
+
+        ft.Row(
+            [
+                ft.ElevatedButton("Inserir", on_click=inserir),
+                ft.ElevatedButton("Atualizar", on_click=atualizar),
+                ft.ElevatedButton("Eliminar", on_click=eliminar),
+                ft.ElevatedButton("Listar", on_click=lambda e: carregar()),
+            ]
+        ),
+
+        tabela,
+        ft.ElevatedButton(
+        "Voltar",
+         on_click=lambda e: menu_principal(page)
+        )
+    )
+
+    carregar()
+
+def menu_ordens(page: ft.Page):
+
+    id_ordem = ft.TextField(label="ID Ordem")
+    id_equipamento = ft.TextField(label="ID Equipamento")
+    data_abertura = ft.TextField(label="Data (AAAA-MM-DD HH:MM:SS)")
+    defeito_relatado = ft.TextField(label="Defeito Relatado")
+    diagnostico = ft.TextField(label="Diagnóstico")
+    solucao = ft.TextField(label="Solução")
+    status = ft.TextField(label="Status")
+    prioridade = ft.TextField(label="Prioridade")
+    valor_servico = ft.TextField(label="Valor Serviço")
+    valor_pecas = ft.TextField(label="Valor Peças")
+    desconto = ft.TextField(label="Desconto")
+    observacoes = ft.TextField(label="Observações")
+
+    tabela = ft.Column()
+
+    def carregar():
+
+        tabela.controls.clear()
+
+        ordens = listar_ordens()
+
+        for o in ordens:
+
+            tabela.controls.append(
+                ft.Text(
+                    f"{o['id_ordem']} | "
+                    f"{o['nome']} | "
+                    f"{o['marca']} | "
+                    f"{o['modelo']} | "
+                    f"{o['data_abertura']} | "
+                    f"{o['status']} | "
+                    f"{o['prioridade']} | "
+                    f"{o['valor_total']} €"
+                )
             )
 
-            atualizar_equipamento(equipamento)
+        page.update()
 
-            print("Equipamento atualizado!")
+    def inserir(e):
 
-        elif opcao == "4":
+        total = (
+            float(valor_servico.value)
+            + float(valor_pecas.value)
+            - float(desconto.value)
+        )
 
-            id_equipamento = int(input("ID do Equipamento: "))
+        ordem = OrdemServico(
+            int(id_equipamento.value),
+            data_abertura.value,
+            defeito_relatado.value,
+            diagnostico.value,
+            solucao.value,
+            status.value,
+            prioridade.value,
+            float(valor_servico.value),
+            float(valor_pecas.value),
+            float(desconto.value),
+            total,
+            observacoes.value
+        )
 
-            eliminar_equipamento(id_equipamento)
+        adicionar_ordem(ordem)
 
-            print("Equipamento eliminado!")
+        carregar()
 
-        elif opcao == "0":
-            break
+    def atualizar(e):
 
-def menu_ordens():
+        total = (
+            float(valor_servico.value)
+            + float(valor_pecas.value)
+            - float(desconto.value)
+        )
 
-    while True:
+        ordem = OrdemServico(
+            int(id_equipamento.value),
+            None,
+            defeito_relatado.value,
+            diagnostico.value,
+            solucao.value,
+            status.value,
+            prioridade.value,
+            float(valor_servico.value),
+            float(valor_pecas.value),
+            float(desconto.value),
+            total,
+            observacoes.value,
+            int(id_ordem.value)
+        )
 
-        print("\n=== ORDENS DE SERVIÇO ===")
-        print("1 - Abrir Ordem")
-        print("2 - Listar Ordens")
-        print("3 - Atualizar Ordem")
-        print("4 - Eliminar Ordem")
-        print("0 - Voltar")
+        atualizar_ordem(ordem)
 
-        opcao = input("Opção: ")
+        carregar()
 
-        if opcao == "1":
+    def eliminar(e):
 
-            id_equipamento = int(input("ID do Equipamento: "))
-            data_abertura = input("Data de abertura (AAAA-MM-DD HH:MM:SS): ")
-            defeito_relatado = input("Defeito relatado: ")
-            diagnostico = input("Diagnóstico: ")
-            solucao = input("Solução: ")
-            status = input("Status: ")
-            prioridade = input("Prioridade: ")
+        eliminar_ordem(int(id_ordem.value))
 
-            valor_servico = float(input("Valor do serviço: "))
-            valor_pecas = float(input("Valor das peças: "))
-            desconto = float(input("Desconto: "))
+        carregar()
 
-            valor_total = valor_servico + valor_pecas - desconto
+    page.controls.clear()
 
-            observacoes = input("Observações: ")
+    page.add(
 
-            ordem = OrdemServico(
-                id_equipamento,
-                data_abertura,
-                defeito_relatado,
-                diagnostico,
-                solucao,
-                status,
-                prioridade,
-                valor_servico,
-                valor_pecas,
-                desconto,
-                valor_total,
-                observacoes
-            )
+        ft.Text(
+            "ORDENS DE SERVIÇO",
+            size=25
+        ),
 
-            adicionar_ordem(ordem)
+        id_ordem,
+        id_equipamento,
+        data_abertura,
+        defeito_relatado,
+        diagnostico,
+        solucao,
+        status,
+        prioridade,
+        valor_servico,
+        valor_pecas,
+        desconto,
+        observacoes,
 
-            print("\nOrdem de Serviço aberta com sucesso!")
+        ft.Row(
+            [
+                ft.ElevatedButton("Abrir Ordem", on_click=inserir),
+                ft.ElevatedButton("Atualizar", on_click=atualizar),
+                ft.ElevatedButton("Eliminar", on_click=eliminar),
+                ft.ElevatedButton("Listar", on_click=lambda e: carregar()),
+            ]
+        ),
 
-        elif opcao == "2":
+        tabela,
 
-            ordens = listar_ordens()
+        ft.ElevatedButton(
+        "Voltar",
+        on_click=lambda e: menu_principal(page)
+)
+    )
 
-            for o in ordens:
-
-                print("----------------------------")
-                print(f"ID: {o['id_ordem']}")
-                print(f"Cliente: {o['nome']}")
-                print(f"Marca: {o['marca']}")
-                print(f"Modelo: {o['modelo']}")
-                print(f"Data: {o['data_abertura']}")
-                print(f"Estado: {o['status']}")
-                print(f"Prioridade: {o['prioridade']}")
-                print(f"Valor Total: {o['valor_total']}")
-
-        elif opcao == "3":
-
-            id_ordem = int(input("ID da Ordem: "))
-            id_equipamento = int(input("ID do Equipamento: "))
-            defeito_relatado = input("Defeito relatado: ")
-            diagnostico = input("Diagnóstico: ")
-            solucao = input("Solução: ")
-            status = input("Status: ")
-            prioridade = input("Prioridade: ")
-
-            valor_servico = float(input("Valor do serviço: "))
-            valor_pecas = float(input("Valor das peças: "))
-            desconto = float(input("Desconto: "))
-
-            valor_total = valor_servico + valor_pecas - desconto
-
-            observacoes = input("Observações: ")
-
-            ordem = OrdemServico(
-                id_equipamento,
-                None,
-                defeito_relatado,
-                diagnostico,
-                solucao,
-                status,
-                prioridade,
-                valor_servico,
-                valor_pecas,
-                desconto,
-                valor_total,
-                observacoes,
-                id_ordem
-            )
-
-            atualizar_ordem(ordem)
-
-            print("\nOrdem atualizada com sucesso!")
-
-        elif opcao == "4":
-
-            id_ordem = int(input("ID da Ordem: "))
-            eliminar_ordem(id_ordem)
-
-            print("\nOrdem de Serviço eliminada com sucesso!")
-        elif opcao == "0":
-            break
-
-        else:
-            print("Opção inválida!")
-
+    carregar()
 # ---------------- MENU PRINCIPAL ----------------
+def menu_principal(page: ft.Page):
 
-def main():
+    page.controls.clear()
 
-    while True:
+    page.add(
+        ft.Text(
+            "TECHSERVICE",
+            size=30,
+            weight=ft.FontWeight.BOLD
+        ),
 
-        print("\n========== TECHSERVICE ==========")
-        print("1 - Clientes")
-        print("2 - Equipamentos")
-        print("3 - Ordens de Serviço")
-        print("0 - Sair")
+        ft.ElevatedButton(
+            "Clientes",
+            on_click=lambda e: menu_clientes(page)
+        ),
 
-        opcao = input("Escolha uma opção: ")
+        ft.ElevatedButton(
+            "Equipamentos",
+            on_click=lambda e: menu_equipamentos(page)
+        ),
 
-        if opcao == "1":
-            menu_clientes()
+        ft.ElevatedButton(
+            "Ordens de Serviço",
+            on_click=lambda e: menu_ordens(page)
+        )
+    )
 
-        elif opcao == "2":
-            menu_equipamentos()
+    page.update()
 
-        elif opcao == "3":
-            menu_ordens()
-            
-        elif opcao == "0":
-            print("Programa terminado.")
-            break
+def main(page: ft.Page):
+    page.scroll = ft.ScrollMode.AUTO
+    page.title = "TECHSERVICE"
+    page.window.width = 900
+    page.window.height = 700
 
-        else:
-            print("Opção inválida.")
+    menu_principal(page)
+
+ft.app(target=main)
 
 
 if __name__ == "__main__":
